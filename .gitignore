@@ -8,3 +8,5 @@ dist
 # local build output and backups of the C program
 *.exe
 *.original.c
+
+.env*

@@ -4,7 +4,7 @@
 
 **Play checkers against an alpha-beta search engine that runs entirely in your browser.**
 
-[**Play it live →**](LIVE_URL)
+[**Play it live →**](https://ai-checkers-nu.vercel.app)
 
 ![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?logo=typescript&logoColor=white)
