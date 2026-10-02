@@ -107,7 +107,7 @@ Mandatory captures and multi-jumps are common in other rule sets; see [ideas for
 You need [Node.js](https://nodejs.org) 20 or newer.
 
 ```bash
-git clone REPO_URL
+git clone https://github.com/maarijimran/ai-checkers.git
 cd ai-checkers
 npm install
 npm run dev        # http://localhost:5173
