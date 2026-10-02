@@ -1,7 +1,3 @@
-// Board rules for the game. These mirror the C program in cli/ exactly:
-// men move and capture forward only, kings move one square in any direction,
-// captures are optional, a jump is a single hop, and a side with no legal move loses.
-
 export type Side = 1 | -1
 export const BLACK: Side = 1
 export const WHITE: Side = -1
@@ -22,7 +18,6 @@ export interface Move {
   tr: number
   tc: number
   piece: number
-  /** The enemy piece jumped over, or 0 for a plain step. */
   captured: number
 }
 
@@ -31,7 +26,6 @@ export const isKing = (piece: number) => piece === BLACK_KING || piece === WHITE
 export const isDark = (r: number, c: number) => (r + c) % 2 === 1
 export const idx = (r: number, c: number) => r * SIZE + c
 
-/** White starts on rows 0-2 and moves down, black starts on rows 5-7 and moves up. */
 export function initialCells(): Cells {
   const cells = new Int8Array(SIZE * SIZE)
   for (let r = 0; r < SIZE; r++) {
@@ -51,7 +45,6 @@ const DIRS: ReadonlyArray<readonly [number, number]> = [
   [1, -1],
 ]
 
-/** Every legal move for a side. Captures come before steps for each piece. */
 export function generateMoves(cells: Cells, side: Side): Move[] {
   const moves: Move[] = []
   const forward = -side
@@ -80,7 +73,6 @@ export function generateMoves(cells: Cells, side: Side): Move[] {
   return moves
 }
 
-/** Applies a move in place. A man that reaches the far row becomes a king. */
 export function applyMove(cells: Cells, m: Move): void {
   let placed = m.piece
   if (m.piece === BLACK_MAN && m.tr === 0) placed = BLACK_KING
@@ -105,12 +97,10 @@ export function countPieces(cells: Cells, side: Side): number {
   return n
 }
 
-/** The winner if the side to move has no legal move, otherwise null. */
 export function winnerFor(cells: Cells, toMove: Side): Side | null {
   return generateMoves(cells, toMove).length === 0 ? opponent(toMove) : null
 }
 
-/** Square names run a1 (bottom left when white is at the bottom) to h8. */
 export function squareName(r: number, c: number): string {
   return String.fromCharCode(97 + (SIZE - 1 - c)) + (r + 1)
 }

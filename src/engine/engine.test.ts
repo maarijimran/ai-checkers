@@ -21,7 +21,6 @@ import {
   type Side,
 } from './rules'
 
-/** Builds a board from [row, col, piece] triples. */
 function board(...pieces: [number, number, number][]): Cells {
   const cells = new Int8Array(64)
   for (const [r, c, p] of pieces) cells[idx(r, c)] = p
@@ -54,7 +53,6 @@ describe('rules', () => {
   })
 
   it('counts the same number of positions as the C program', () => {
-    // These totals were checked against the original C move generator.
     expect(perft(initialCells(), WHITE, 1)).toBe(7)
     expect(perft(initialCells(), WHITE, 2)).toBe(49)
     expect(perft(initialCells(), WHITE, 3)).toBe(379)
@@ -119,7 +117,6 @@ describe('rules', () => {
   it('declares a winner when the side to move has no legal move', () => {
     expect(winnerFor(board([7, 0, BLACK_MAN]), WHITE)).toBe(BLACK)
     expect(winnerFor(initialCells(), WHITE)).toBeNull()
-    // a blocked man with no jump available has no moves either
     const blocked = board([0, 1, WHITE_MAN], [1, 0, BLACK_MAN], [1, 2, BLACK_MAN], [2, 3, BLACK_MAN], [2, 1, BLACK_MAN])
     expect(winnerFor(blocked, WHITE)).toBe(BLACK)
   })
@@ -142,7 +139,7 @@ describe('game', () => {
     expect(next.ids[idx(move.fr, move.fc)]).toBe(-1)
     expect(next.turn).toBe(BLACK)
     expect(next.label).toBe(notation(move))
-    expect(start.cells[idx(move.fr, move.fc)]).toBe(WHITE_MAN) // original untouched
+    expect(start.cells[idx(move.fr, move.fc)]).toBe(WHITE_MAN)
   })
 
   it('removes the id of a captured piece and reports the winner', () => {
@@ -182,7 +179,6 @@ describe('ai', () => {
   it('does not step into a capture when a safe move exists', () => {
     const cells = board([4, 1, WHITE_MAN], [5, 2, BLACK_MAN], [6, 5, BLACK_MAN], [0, 7, WHITE_MAN])
     const result = findBestMove(cells, BLACK, { timeMs: 5000, maxDepth: 3 })
-    // moving the man on c6 next to the white man would lose it for nothing
     expect(result.move).not.toMatchObject({ fr: 5, fc: 2, tr: 4, tc: 3 })
   })
 
@@ -193,7 +189,6 @@ describe('ai', () => {
   })
 
   it('finds a forced win and scores it as one', () => {
-    // White's only man is about to be captured and has nothing else to move.
     const cells = board([4, 3, WHITE_MAN], [5, 2, BLACK_MAN], [6, 5, BLACK_MAN])
     const result = findBestMove(cells, BLACK, quick)
     expect(result.move).toMatchObject({ fr: 5, fc: 2, tr: 3, tc: 4 })
@@ -207,7 +202,6 @@ describe('ai', () => {
       return out
     }
     const cells = initialCells()
-    // play a few plies from the start so the position is not trivial
     for (let i = 0; i < 6; i++) {
       const side = (i % 2 === 0 ? WHITE : BLACK) as Side
       applyMove(cells, generateMoves(cells, side)[i % 3])

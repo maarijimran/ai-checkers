@@ -97,8 +97,6 @@ button {
   justify-self: center;
 }
 
-/* ---------- board ---------- */
-
 .board {
   position: relative;
   aspect-ratio: 1;
@@ -297,8 +295,6 @@ button {
     opacity: 0;
   }
 }
-
-/* ---------- panel ---------- */
 
 .panel {
   display: grid;

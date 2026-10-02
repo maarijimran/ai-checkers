@@ -3,7 +3,6 @@ import type { Snapshot } from '../engine/game'
 
 interface BoardProps {
   snapshot: Snapshot
-  /** The side shown at the bottom of the screen. */
   bottom: Side
   selected: number | null
   targets: Move[]

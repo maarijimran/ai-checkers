@@ -11,13 +11,11 @@ import {
   type Side,
 } from './rules'
 
-/** One position in a game. Pieces carry an id so the board can animate their moves. */
 export interface Snapshot {
   cells: Cells
   ids: number[]
   turn: Side
   last: Move | null
-  /** Notation of the move that led here, empty for the starting position. */
   label: string
   winner: Side | null
 }
@@ -29,7 +27,6 @@ export function newGame(): Snapshot {
   return { cells, ids, turn: WHITE, last: null, label: '', winner: null }
 }
 
-/** Plays a legal move and returns the new position, leaving the old one untouched. */
 export function play(s: Snapshot, m: Move): Snapshot {
   const cells = s.cells.slice()
   const ids = s.ids.slice()

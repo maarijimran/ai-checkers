@@ -8,11 +8,6 @@ interface Pending {
   resolve: (result: SearchResult) => void
 }
 
-/**
- * Runs searches in a Web Worker. A running search cannot be interrupted from
- * outside, so cancelling terminates the worker and a fresh one starts on the
- * next request. The returned object is stable between renders.
- */
 export function useAi() {
   const worker = useRef<Worker | null>(null)
   const pending = useRef<Pending | null>(null)

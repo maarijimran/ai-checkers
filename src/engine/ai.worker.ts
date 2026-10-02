@@ -13,7 +13,6 @@ export interface WorkerResponse {
   result: SearchResult
 }
 
-// The search runs here so the page stays responsive while the AI thinks.
 self.onmessage = (event: MessageEvent<WorkerRequest>) => {
   const { id, cells, side, options } = event.data
   const result = findBestMove(cells, side, options)

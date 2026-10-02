@@ -55,7 +55,6 @@ export default function App() {
     setAiInfo(null)
   }, [ai])
 
-  // The AI answers whenever it is its turn.
   useEffect(() => {
     if (aiSide === null || current.winner || current.turn !== aiSide) return
     let cancelled = false
@@ -106,7 +105,6 @@ export default function App() {
     reset()
   }
 
-  // Takes back moves until it is the human's turn again.
   const undo = () => {
     ai.cancel()
     setThinking(false)

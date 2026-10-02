@@ -20,26 +20,18 @@ export const MAX_DEPTH = 30
 const INF = 1e9
 
 export interface SearchOptions {
-  /** Wall-clock budget for the whole search. */
   timeMs: number
-  /** Deepest iteration to try. */
   maxDepth: number
 }
 
 export interface SearchResult {
   move: Move | null
-  /** Score from the searching side's point of view, in hundredths of a man. */
   score: number
-  /** Deepest iteration that finished. */
   depth: number
   nodes: number
   elapsedMs: number
 }
 
-/**
- * Static score with black positive. Men gain value as they advance, kings are
- * worth 2.5 men, and the centre and each side's home row are favoured.
- */
 export function evaluate(cells: Cells): number {
   let score = 0
   for (let r = 0; r < SIZE; r++) {
@@ -57,17 +49,10 @@ export function evaluate(cells: Cells): number {
   return score
 }
 
-/** Capturing moves first, which lets alpha-beta cut off far more of the tree. */
 function orderMoves(moves: Move[]): void {
   moves.sort((a, b) => (b.captured ? 1 : 0) - (a.captured ? 1 : 0))
 }
 
-/**
- * Iterative deepening negamax with alpha-beta pruning and a capture-only
- * quiescence search at the leaves. Searches 1 move ahead, then 2, then 3 and so
- * on until the time budget is used up, and returns the best move of the last
- * depth that finished.
- */
 export function findBestMove(input: Cells, side: Side, opts: SearchOptions): SearchResult {
   const cells = input.slice()
   const start = performance.now()
@@ -80,8 +65,6 @@ export function findBestMove(input: Cells, side: Side, opts: SearchOptions): Sea
     return timeUp
   }
 
-  // Keep playing out captures so a piece that is about to be taken is not
-  // mistaken for a safe one. Standing still is always allowed.
   const quiesce = (alpha: number, beta: number, turn: Side): number => {
     if (outOfTime()) return 0
     let best = evaluate(cells) * turn
@@ -101,7 +84,6 @@ export function findBestMove(input: Cells, side: Side, opts: SearchOptions): Sea
     return best
   }
 
-  // A side with no moves has lost, and sooner losses score worse than later ones.
   const negamax = (depth: number, alpha: number, beta: number, turn: Side, ply: number): number => {
     if (outOfTime()) return 0
     if (depth <= 0) return quiesce(alpha, beta, turn)
@@ -149,11 +131,10 @@ export function findBestMove(input: Cells, side: Side, opts: SearchOptions): Sea
       }
     }
     if (timeUp) break
-    // the best move goes first so the next, deeper search starts with it
     const [best] = rootMoves.splice(bestIdx, 1)
     rootMoves.unshift(best)
     result = finish(best, bestVal, depth)
-    if (Math.abs(bestVal) >= WIN_SCORE - MAX_DEPTH * 2) break // the game is already decided
+    if (Math.abs(bestVal) >= WIN_SCORE - MAX_DEPTH * 2) break
   }
   return { ...result, nodes, elapsedMs: performance.now() - start }
 }
